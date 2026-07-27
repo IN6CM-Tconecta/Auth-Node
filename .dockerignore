@@ -1,0 +1,27 @@
+# ── Dependencias ──────────────────────────────
+node_modules/
+npm-debug.log*
+
+# ── Variables de entorno (nunca al contenedor) ─
+.env
+.env.local
+.env.*.local
+
+# ── Git ───────────────────────────────────────
+.git/
+.gitignore
+
+# ── Editor / OS ───────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── Logs ──────────────────────────────────────
+logs/
+*.log
+
+# ── Tests / Dev ───────────────────────────────
+coverage/
+*.test.js
+*.spec.js
