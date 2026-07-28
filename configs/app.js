@@ -74,31 +74,28 @@ const applyRoutes = (app) => {
   app.use(notFound);
 };
 
+export const app = express();
+
+// Confiar en el proxy inverso (nginx, ELB, etc.)
+app.set('trust proxy', 1);
+
+// Para Vercel Serverless, configuramos la app síncronamente
+applyMiddlewares(app);
+applyRoutes(app);
+app.use(errorHandler);
+
 /**
  * Inicializa y arranca el servidor Express.
  * Equivalente al bloque `app.Run()` del Program.cs.
  */
 export const initServer = async () => {
-  const app = express();
   const PORT = process.env.PORT || 5001;
-
-  // Confiar en el proxy inverso (nginx, ELB, etc.)
-  app.set('trust proxy', 1);
 
   try {
     // 1. Conectar a BD y sincronizar modelos (equivalente a ApplyPendingMigrationsAsync)
     await dbConnection();
 
-    // 2. Aplicar middlewares globales
-    applyMiddlewares(app);
-
-    // 3. Registrar rutas
-    applyRoutes(app);
-
-    // 4. Manejador global de errores (debe ir DESPUÉS de las rutas)
-    app.use(errorHandler);
-
-    // 5. Arrancar servidor
+    // 2. Arrancar servidor
     app.listen(PORT, () => {
       console.log(`[TransmetroAuth] Servidor corriendo en http://localhost:${PORT}`);
       console.log(`[TransmetroAuth] Health check: http://localhost:${PORT}${BASE_PATH}/health`);

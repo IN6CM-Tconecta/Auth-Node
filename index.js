@@ -20,5 +20,15 @@ process.on('unhandledRejection', (reason, promise) => {
   process.exit(1);
 });
 
-// Inicializar el servidor Express
-initServer();
+import { app, initServer } from './configs/app.js';
+import { dbConnection } from './configs/db.js';
+
+// Si estamos en Vercel, iniciamos la DB (sin bloquear el export) y exportamos la app
+if (process.env.VERCEL) {
+  dbConnection();
+} else {
+  // Inicializar el servidor Express localmente
+  initServer();
+}
+
+export default app;
